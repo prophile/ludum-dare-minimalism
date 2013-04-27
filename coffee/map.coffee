@@ -17,6 +17,8 @@ GameState.heroPos.slidingWindow(2)
 
 entitySource = Bacon.combineTemplate
   heroPosition: GameState.heroPos
+  creatures: GameState.creatures
+  creatureDB: CreatureDB
 
 entities = entitySource.map (data) ->
   elements = []
@@ -24,6 +26,11 @@ entities = entitySource.map (data) ->
     sprite: 'hero'
     x: data.heroPosition[0]
     y: data.heroPosition[1]
+  for creature in data.creatures
+    elements.push
+      sprite: data.creatureDB[creature.type].sprite
+      x: creature.x
+      y: creature.y
   elements
 
 entities.onValue (x) ->
