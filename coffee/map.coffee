@@ -9,11 +9,17 @@ initialMap = ->
     map.push ('*' for x in [1..WIDTH])
   map
 
-GameState.heroPos.slidingWindow(2)
-                 .filter((x) -> x.length is 2)
-                 .filter((x) -> x[0][0] isnt x[1][0] or
-                                x[0][1] isnt x[1][1])
-                 .onValue (x) -> PlaySound 'step'
+$ ->
+  ReadFile('castle-text.txt').assign $('#castle-text'), 'text'
+  ReadFile('castle-name.txt').assign $('#castle-name'), 'text'
+
+window.Step = GameState.heroPos
+                       .slidingWindow(2)
+                       .filter((x) -> x.length is 2)
+                       .filter((x) -> x[0][0] isnt x[1][0] or
+                                      x[0][1] isnt x[1][1])
+Step.onValue ->
+  PlaySound 'step'
 
 entitySource = Bacon.combineTemplate
   heroPosition: GameState.heroPos
