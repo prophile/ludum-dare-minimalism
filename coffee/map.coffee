@@ -12,6 +12,12 @@ initialMap = ->
 setHeroPosition = new Bacon.Bus
 heroPosition = setHeroPosition.toProperty [4, 4]
 
+heroPosition.slidingWindow(2)
+            .filter((x) -> x.length is 2)
+            .filter((x) -> x[0][0] isnt x[1][0] or
+                           x[0][1] isnt x[1][1])
+            .onValue (x) -> PlaySound 'step'
+
 entitySource = Bacon.combineTemplate
   heroPosition: heroPosition
 
