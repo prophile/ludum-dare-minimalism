@@ -21,6 +21,7 @@ window.Step = GameState.heroPos
 Step.onValue ->
   PlaySound 'step'
 
+
 entitySource = Bacon.combineTemplate
   heroPosition: GameState.heroPos
   creatures: GameState.creatures
@@ -66,6 +67,32 @@ baseMapMetadata = baseMapData.map (data) ->
   _.object ([item[0], JSON.parse(item[1])] for item in elements when item.length is 2)
 
 baseMap = baseMapSource.toProperty initialMap()
+
+# Creature updates and encounters on step
+Bacon.combineAsArray(GameState.heroPos, baseMapSource, baseMapMetadata)
+     .sampledBy(Step)
+     .onValues (hero, map, meta) ->
+  GameState.mutate (state) ->
+    # Stage 1: creature movement
+    for creature in state.creatures
+      moveDir = [0, 0]
+      switch creature.state
+        when "roam"
+          moveDir = [[-1, 0], [1, 0], [0, -1], [0, 1]][Math.floor(Math.random()*4)]
+        when "enraged"
+          moveDir = [0, 1]
+      newPos = [creature.x + moveDir[0], creature.y + moveDir[1]]
+      tile = map[newPos[1]][newPos[0]]
+      walkable = (tile is ' ' or tile in (meta.aiPath ? ""))
+      if walkable
+        creature.x = newPos[0]
+        creature.y = newPos[1]
+    # Stage 2: creature enragement
+      if creature.state is "roam"
+        creature.state = "enraged" if Distance(creature.x, creature.y, hero[0], hero[1])<=3
+    # Stage 3: creature engagement
+    # Stage 4: creature creation (possibly)
+    state
 
 handleService = (options) ->
   switch options.service

@@ -24,6 +24,9 @@ window.Roll =
       return false # critical dodge
     return proRoll > oppRole
 
+window.Distance = (x1, y1, x2, y2) ->
+  Math.max(Math.abs(x1 - x2), Math.abs(y1 - y2))
+
 window.CreatureDB = ReadFile("creatures.json").map(JSON.parse)
 
 $ ->

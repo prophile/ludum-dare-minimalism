@@ -18,4 +18,5 @@ $ = ["ground", {"type": "border_y", "dest": "second"}]
 B = ["ground", {"type": "border_x", "dest": "third"}]
 @ = ["castle", {"type": "service", "service": "castle"}]
 noRandomSpawn = true
+aiPath = "."
 
