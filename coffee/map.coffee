@@ -9,12 +9,32 @@ initialMap = ->
     map.push ('*' for x in [1..WIDTH])
   map
 
-setEntities = new Bacon.Bus
-entities = setEntities.toProperty []
+setHeroPosition = new Bacon.Bus
+heroPosition = setHeroPosition.toProperty [4, 4]
 
-setTimeout((->
-  setEntities.push [{sprite: 'hero', x: 4, y: 4}]
-), 2800)
+plugKey = (stream, oX, oY) ->
+  setHeroPosition.plug heroPosition.sampledBy(stream).map (position) ->
+    [position[0] + oX, position[1] + oY]
+
+plugKey Keys.Left, -1, 0
+plugKey Keys.Up, 0, -1
+plugKey Keys.Down, 0, 1
+plugKey Keys.Right, 1, 0
+
+entitySource = Bacon.combineTemplate
+  heroPosition: heroPosition
+
+entities = entitySource.map (data) ->
+  elements = []
+  elements.push
+    sprite: 'hero'
+    x: data.heroPosition[0]
+    y: data.heroPosition[1]
+  elements
+
+entities.onValue (x) ->
+  console.log "ents"
+  console.log x
 
 setCurrentMap = new Bacon.Bus
 currentMap = setCurrentMap.toProperty "first"
