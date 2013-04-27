@@ -17,8 +17,6 @@ $ ->
     console.log "Connection opened"
   source.onerror = ->
     console.log "Connection error"
-  source.addEventListener 'hello', ->
-    console.log "Got HELLO from server"
   source.addEventListener 'file', (event) ->
     receiveFile.push event.data
 
