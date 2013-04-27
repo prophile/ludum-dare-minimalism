@@ -75,6 +75,9 @@ plugKey = (stream, oX, oY) ->
       when "border_y"
         setCurrentMap.push event.dest
         [newPos[0], (HEIGHT - 1) - newPos[1]]
+      when "gateway"
+        setCurrentMap.push event.dest
+        event.pos
     # work out the event
 
 $ ->
