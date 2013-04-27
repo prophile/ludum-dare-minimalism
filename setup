@@ -1,4 +1,5 @@
 #!/bin/bash
 touch events.log
 chmod 666 events.log
+coffee -o js/code --compile coffee
 
