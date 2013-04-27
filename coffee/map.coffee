@@ -12,15 +12,6 @@ initialMap = ->
 setHeroPosition = new Bacon.Bus
 heroPosition = setHeroPosition.toProperty [4, 4]
 
-plugKey = (stream, oX, oY) ->
-  setHeroPosition.plug heroPosition.sampledBy(stream).map (position) ->
-    [position[0] + oX, position[1] + oY]
-
-plugKey Keys.Left, -1, 0
-plugKey Keys.Up, 0, -1
-plugKey Keys.Down, 0, 1
-plugKey Keys.Right, 1, 0
-
 entitySource = Bacon.combineTemplate
   heroPosition: heroPosition
 
@@ -43,6 +34,12 @@ tiles =
   '*': 'stone'
   ' ': 'ground'
 
+tileEvents =
+  '*':
+    type: 'block'
+  ' ':
+    type: 'walk'
+
 baseMapData = currentMap.flatMapLatest (x) ->
   ReadFile "#{x}.level"
 baseMapSource = baseMapData.map (data) ->
@@ -57,7 +54,31 @@ baseMapMetadata = baseMapData.map (data) ->
 
 baseMap = baseMapSource.toProperty initialMap()
 
+plugKey = (stream, oX, oY) ->
+  sources = Bacon.combineTemplate
+    oldPos: heroPosition
+    map: baseMap
+    md: baseMapMetadata
+  setHeroPosition.plug sources.sampledBy(stream).map (params) ->
+    {oldPos, map, md} = params
+    newPos = [oldPos[0] + oX, oldPos[1] + oY]
+    tile = map[newPos[1]][newPos[0]]
+    if md[tile]?
+      event = tile[1]
+    else
+      event = tileEvents[tile]
+    switch event.type
+      when "walk"
+        [oldPos[0] + oX, oldPos[1] + oY]
+      when "block"
+        oldPos
+    # work out the event
+
 $ ->
+  plugKey Keys.Left, -1, 0
+  plugKey Keys.Up, 0, -1
+  plugKey Keys.Down, 0, 1
+  plugKey Keys.Right, 1, 0
   paper = Raphael(50, 50, WIDTH * UNIT, HEIGHT * UNIT)
   for y in [0..(HEIGHT-1)]
     for x in [0..(WIDTH-1)]
