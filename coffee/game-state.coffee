@@ -10,7 +10,7 @@ initialGameState =
     des: 0 # destruction magic, used in calculation of effectiveness
     alt: 0 # alteration magic, used in calculation of effectiveness
   hp: 10
-  creatures: [{type: "badger", state: "enraged", x: 9, y: 9}]
+  creatures: []
 
 # Maximum HP is calculated as:
 #   9 + ceil(0.3 * 2.2 ^ level)
