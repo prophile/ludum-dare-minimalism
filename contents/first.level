@@ -2,7 +2,7 @@
 **.... ........*
 *^.... ........*
 *...       ....*
-<... .*........*
+<... .*@.......*
 B    .**.......*
 <... .**.......*
 <... ..*.......*
@@ -16,4 +16,5 @@ $ = ["ground", {"type": "border_y", "dest": "second"}]
 ^ = ["cavemouth", {"type": "gateway", "dest": "cave", "pos": [1, 1]}]
 < = ["grass", {"type": "border_x", "dest": "third"}]
 B = ["ground", {"type": "border_x", "dest": "third"}]
+@ = ["castle", {"type": "service", "service": "castle"}]
 

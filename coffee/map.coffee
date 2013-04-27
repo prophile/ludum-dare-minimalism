@@ -60,6 +60,13 @@ baseMapMetadata = baseMapData.map (data) ->
 
 baseMap = baseMapSource.toProperty initialMap()
 
+handleService = (options) ->
+  switch options.service
+    when "castle"
+      PlaySound 'fanfare'
+      $('#castle').modal 'show'
+      # things
+
 plugKey = (stream, oX, oY) ->
   sources = Bacon.combineTemplate
     oldPos: heroPosition
@@ -87,6 +94,9 @@ plugKey = (stream, oX, oY) ->
       when "gateway"
         setCurrentMap.push event.dest
         event.pos
+      when "service"
+        handleService event
+        oldPos
     # work out the event
 
 $ ->
