@@ -85,6 +85,7 @@ Bacon.combineAsArray(GameState.heroPos, baseMapSource, baseMapMetadata)
      .onValues (hero, map, meta) ->
   GameState.mutate (state) ->
     # Create the PF map
+    hasRoamer = false
     grid = new PF.Grid WIDTH, HEIGHT
     # Populate the walkability information
     for y in [0..(HEIGHT-1)]
@@ -96,6 +97,8 @@ Bacon.combineAsArray(GameState.heroPos, baseMapSource, baseMapMetadata)
     for creature in state.creatures
       if creature.state is "parked"
         grid.setWalkableAt(creature.x, creature.y, false)
+      else if creature.state is "roam"
+        hasRoamer = true
     finder = new PF.BiAStarFinder
       allowDiagonal: false
       heuristic: PF.Heuristic.chebyshev
@@ -124,6 +127,16 @@ Bacon.combineAsArray(GameState.heroPos, baseMapSource, baseMapMetadata)
         creature.state = "enraged" if Distance(creature.x, creature.y, hero[0], hero[1])<=3
     # Stage 3: creature engagement
     # Stage 4: creature creation (possibly)
+    if not hasRoamer and not meta.noRandomSpawn?
+      if Math.random() < 0.1
+        # create a roamer
+        # TODO: pick type
+        # TODO: pick location
+        state.creatures.push
+          type: "badger"
+          state: "roam"
+          x: 4
+          y: 4
     state
 
 handleService = (options) ->
