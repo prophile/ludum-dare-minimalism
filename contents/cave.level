@@ -1,4 +1,4 @@
-*^**************
+*A****^*********
 *..............*
 *.......*......*
 *******$*......*
@@ -13,5 +13,6 @@
 . = ["cave", {"type": "walk"}]
 $ = ["stone", {"type": "walk"}]
 ^ = ["cavemouth", {"type": "gateway", "dest": "first", "pos": [1, 4]}]
+A = ["cavemouth", {"type": "gateway", "dest": "third", "pos": [5, 1]}]
 aiPath = "."
 

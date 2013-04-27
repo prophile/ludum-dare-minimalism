@@ -13,7 +13,7 @@ B    .**.......*
 % = ["grass", {"type": "border_y", "dest": "second"}]
 $ = ["ground", {"type": "border_y", "dest": "second"}]
 . = ["grass", {"type": "walk"}]
-^ = ["cavemouth", {"type": "gateway", "dest": "cave", "pos": [1, 1]}]
+^ = ["cavemouth", {"type": "gateway", "dest": "cave", "pos": [6, 1]}]
 < = ["grass", {"type": "border_x", "dest": "third"}]
 B = ["ground", {"type": "border_x", "dest": "third"}]
 @ = ["castle", {"type": "service", "service": "castle"}]
