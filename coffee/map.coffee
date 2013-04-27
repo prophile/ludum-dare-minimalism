@@ -9,8 +9,15 @@ initialMap = ->
     map.push ('*' for x in [1..WIDTH])
   map
 
+setEntities = new Bacon.Bus
+entities = setEntities.toProperty []
+
+setTimeout((->
+  setEntities.push [{sprite: 'hero', x: 4, y: 4}]
+), 2800)
+
 setCurrentMap = new Bacon.Bus
-currentMap = setCurrentMap.toProperty("first")
+currentMap = setCurrentMap.toProperty "first"
 
 tiles =
   '*': 'stone'
@@ -47,4 +54,11 @@ $ ->
         tileSelection.skipDuplicates()
                      .map((tile) -> "img/tiles/#{tile}.png")
                      .assign im, 'attr', 'src'
+  entitySprites = []
+  entities.onValue (ents) ->
+    sprite.remove() for sprite in entitySprites
+    for entity in ents
+      newEnt = paper.image("img/sprites/#{entity.sprite}.png",
+                           entity.x*UNIT, entity.y*UNIT, UNIT, UNIT)
+      entitySprites.push newEnt
 
