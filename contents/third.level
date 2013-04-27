@@ -13,4 +13,5 @@
 . = ["grass", {"type": "walk"}]
 > = ["grass", {"type": "border_x", "dest": "first"}]
 B = ["ground", {"type": "border_x", "dest": "first"}]
+aiPath = "."
 

@@ -73,6 +73,21 @@ Bacon.combineAsArray(GameState.heroPos, baseMapSource, baseMapMetadata)
      .sampledBy(Step)
      .onValues (hero, map, meta) ->
   GameState.mutate (state) ->
+    # Create the PF map
+    grid = new PF.Grid WIDTH, HEIGHT
+    # Populate the walkability information
+    for y in [0..(HEIGHT-1)]
+      for x in [0..(WIDTH-1)]
+        tile = map[y][x]
+        walkable = (tile is ' ' or tile in (meta.aiPath ? ""))
+        grid.setWalkableAt(x, y, walkable)
+    # Fill in any parked creatures in the walkability grid
+    for creature in state.creatures
+      if creature.state is "parked"
+        grid.setWalkableAt(creature.x, creature.y, false)
+    finder = new PF.BiAStarFinder
+      allowDiagonal: false
+      heuristic: PF.Heuristic.chebyshev
     # Stage 1: creature movement
     for creature in state.creatures
       moveDir = [0, 0]
@@ -80,7 +95,13 @@ Bacon.combineAsArray(GameState.heroPos, baseMapSource, baseMapMetadata)
         when "roam"
           moveDir = [[-1, 0], [1, 0], [0, -1], [0, 1]][Math.floor(Math.random()*4)]
         when "enraged"
-          moveDir = [0, 1]
+          liveGrid = grid.clone()
+          path = finder.findPath(creature.x, creature.y, hero[0], hero[1], liveGrid)
+          if not path? or path.length <= 1
+            creature.state = "roam" # return to roaming
+          else
+            firstStep = path[1]
+            moveDir = [firstStep[0] - creature.x, firstStep[1] - creature.y]
       newPos = [creature.x + moveDir[0], creature.y + moveDir[1]]
       tile = map[newPos[1]][newPos[0]]
       walkable = (tile is ' ' or tile in (meta.aiPath ? ""))
