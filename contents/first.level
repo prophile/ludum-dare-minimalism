@@ -10,7 +10,7 @@
 *... .........**
 **.. .......****
 ****$%%%%%******
-% = ["grass", {"type": "border", "dest": "second"}]
-$ = ["ground", {"type": "border", "dest": "second"}]
+% = ["grass", {"type": "border_y", "dest": "second"}]
+$ = ["ground", {"type": "border_y", "dest": "second"}]
 . = ["grass", {"type": "walk"}]
 

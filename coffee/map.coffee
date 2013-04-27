@@ -69,9 +69,12 @@ plugKey = (stream, oX, oY) ->
       event = tileEvents[tile]
     switch event.type
       when "walk"
-        [oldPos[0] + oX, oldPos[1] + oY]
+        newPos
       when "block"
         oldPos
+      when "border_y"
+        setCurrentMap.push event.dest
+        [newPos[0], (HEIGHT - 1) - newPos[1]]
     # work out the event
 
 $ ->
