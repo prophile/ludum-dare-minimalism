@@ -131,12 +131,22 @@ Bacon.combineAsArray(GameState.heroPos, baseMapSource, baseMapMetadata)
       if Math.random() < 0.1
         # create a roamer
         type = meta.fauna[Math.floor(Math.random() * meta.fauna.length)]
-        # TODO: pick location
-        state.creatures.push
-          type: "badger"
-          state: "roam"
-          x: 4
-          y: 4
+        location = null
+        for i in [1..10]
+          possLocation = [Math.floor(Math.random() * WIDTH),
+                          Math.floor(Math.random() * HEIGHT)]
+          # condition 1: walkable
+          continue unless grid.isWalkableAt(possLocation[0], possLocation[1])
+          # condition 2: not too close
+          continue unless Distance(possLocation[0], possLocation[1],
+                                   hero[0], hero[1]) > 4
+          location = possLocation
+        if location?
+          state.creatures.push
+            type: "badger"
+            state: "roam"
+            x: location[0]
+            y: location[1]
     state
 
 handleService = (options) ->
