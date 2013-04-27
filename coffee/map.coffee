@@ -64,7 +64,7 @@ plugKey = (stream, oX, oY) ->
     newPos = [oldPos[0] + oX, oldPos[1] + oY]
     tile = map[newPos[1]][newPos[0]]
     if md[tile]?
-      event = tile[1]
+      event = md[tile][1]
     else
       event = tileEvents[tile]
     switch event.type
