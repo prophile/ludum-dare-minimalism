@@ -6,35 +6,45 @@ UNIT = 48
 initialMap = ->
   map = []
   for y in [1..HEIGHT]
-    map.push ('ground' for x in [1..WIDTH])
+    map.push ('*' for x in [1..WIDTH])
   map
 
-baseMapBus = new Bacon.Bus
-baseMap = baseMapBus.toProperty initialMap()
+setCurrentMap = new Bacon.Bus
+currentMap = setCurrentMap.toProperty("first")
 
-mapMutator = new Bacon.Bus
+tiles =
+  '*': 'stone'
+  ' ': 'ground'
 
-mutateMap = (handler) ->
-  mapMutator.push handler
+baseMapData = currentMap.flatMapLatest (x) ->
+  ReadFile "#{x}.level"
+baseMapSource = baseMapData.map (data) ->
+  lines = data.split /\n/
+  for line in [0..(HEIGHT-1)]
+    x for x in lines[line]
 
-Bacon.onValues baseMap, mapMutator, (oldMap, mutate) ->
-  baseMapBus.push mutate(oldMap)
+baseMapMetadata = baseMapData.map (data) ->
+  lines = data.split /\n/
+  elements = (line.split /\s*=\s*/ for line in lines[HEIGHT..])
+  _.object ([item[0], JSON.parse(item[1])] for item in elements when item.length is 2)
+
+baseMap = baseMapSource.toProperty initialMap()
 
 $ ->
   paper = Raphael(50, 50, WIDTH * UNIT, HEIGHT * UNIT)
-  #rectangle = paper.rect(0, 0, WIDTH*UNIT, HEIGHT*UNIT)
-  #rectangle.attr "fill", "#ffa500"
   for y in [0..(HEIGHT-1)]
     for x in [0..(WIDTH-1)]
       do (x, y) ->
         im = paper.image 'about:blank', UNIT*x, UNIT*y, UNIT, UNIT
-        baseMap.map((tiles) -> tiles[y][x])
-               .skipDuplicates()
-               .map((tile) -> "img/tiles/#{tile}.png")
-               .assign im, 'attr', 'src'
-
-setTimeout (->
-  mutateMap (map) ->
-    map[2][2] = 'grass'
-    map), 2000
+        component = baseMap.map((tiles) -> tiles[y][x])
+        tileSelection = Bacon.combineAsArray(component, baseMapMetadata)
+                             .map (elements) ->
+                                [tile, md] = elements
+                                if md[tile]?
+                                  md[tile][0]
+                                else
+                                  tiles[tile]
+        tileSelection.skipDuplicates()
+                     .map((tile) -> "img/tiles/#{tile}.png")
+                     .assign im, 'attr', 'src'
 
