@@ -1,7 +1,7 @@
 window.XPToLevel = (xp) ->
   Math.floor(2.708 * Math.log(0.606*(xp + 22))) - 6
 
-window.MaxHP = (conLevel) ->
+window.MaxHP = (level) ->
   Math.floor(0.5*level*level + 0.9*level + 9)
 
 window.Roll =

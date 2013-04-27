@@ -12,6 +12,17 @@ initialMap = ->
 $ ->
   ReadFile('castle-text.txt').assign $('#castle-text'), 'text'
   ReadFile('castle-name.txt').assign $('#castle-name'), 'text'
+  GameState.stream
+           .map((x) -> if x.combatState? then 'show' else 'hide')
+           .skipDuplicates()
+           .assign $('#combat'), 'modal'
+
+GameState.stream
+         .map((x) -> x.combatState?)
+         .skipDuplicates()
+         .filter((x) -> x)
+         .onValue ->
+  PlaySound 'combat'
 
 window.Step = GameState.heroPos
                        .slidingWindow(2)
@@ -80,9 +91,9 @@ ChangeMap.onValue ->
     state
 
 # Creature updates and encounters on step
-Bacon.combineAsArray(GameState.heroPos, baseMapSource, baseMapMetadata)
+Bacon.combineAsArray(GameState.heroPos, CreatureDB, baseMapSource, baseMapMetadata)
      .sampledBy(Step)
-     .onValues (hero, map, meta) ->
+     .onValues (hero, cdb, map, meta) ->
   GameState.mutate (state) ->
     # Create the PF map
     hasRoamer = false
@@ -103,7 +114,7 @@ Bacon.combineAsArray(GameState.heroPos, baseMapSource, baseMapMetadata)
       allowDiagonal: false
       heuristic: PF.Heuristic.chebyshev
     # Stage 1: creature movement
-    for creature in state.creatures
+    state.creatures = _.flatten (for creature in state.creatures
       moveDir = [0, 0]
       switch creature.state
         when "roam"
@@ -126,6 +137,17 @@ Bacon.combineAsArray(GameState.heroPos, baseMapSource, baseMapMetadata)
       if creature.state is "roam"
         creature.state = "enraged" if Distance(creature.x, creature.y, hero[0], hero[1])<=3
     # Stage 3: creature engagement
+      if Distance(creature.x, creature.y, hero[0], hero[1]) <= 1
+        {con, str, dex} = cdb[creature.type].stats
+        state.combatState =
+          hp: MaxHP(XPToLevel(con))
+          con: con
+          dex: dex
+          str: str
+          type: creature.type
+        []
+      else
+        [creature])
     # Stage 4: creature creation (possibly)
     if not hasRoamer and meta.fauna?
       if Math.random() < 0.1

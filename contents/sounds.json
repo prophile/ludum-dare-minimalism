@@ -1,6 +1,10 @@
 {
   "step": "step.wav",
   "debug": "ding.wav",
-  "fanfare": "fanfare.wav"
+  "fanfare": "fanfare.wav",
+  "hit": "hit.wav",
+  "hurt": "hurt.wav",
+  "crit": "crit.wav",
+  "combat": "combat.wav"
 }
 

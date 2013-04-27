@@ -3,9 +3,9 @@ initialGameState =
   x: 4
   y: 4
   stats:
-    str: 0 # strength, used in rolls for hit damage
-    dex: 0 # dexterity, used in rolls for will hit and dodge
-    con: 0 # constitution, used in calculation of hp
+    str: 0 # strength, used in rolls for hit damage, add half damage done
+    dex: 0 # dexterity, used in rolls for will hit and dodge, add one for hit and three for dodge
+    con: 0 # constitution, used in calculation of hp, add damage taken
     hea: 0 # healing magic, used in calculation of effectiveness
     des: 0 # destruction magic, used in calculation of effectiveness
     alt: 0 # alteration magic, used in calculation of effectiveness

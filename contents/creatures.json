@@ -2,7 +2,6 @@
   "badger": {"sprite": "badger",
              "stats": {"str": 8,
                        "dex": 3,
-                       "con": 7},
-             "randomSpawn": true}
+                       "con": 7}}
 }
 
