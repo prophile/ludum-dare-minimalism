@@ -9,17 +9,14 @@ initialMap = ->
     map.push ('*' for x in [1..WIDTH])
   map
 
-setHeroPosition = new Bacon.Bus
-heroPosition = setHeroPosition.toProperty [4, 4]
-
-heroPosition.slidingWindow(2)
-            .filter((x) -> x.length is 2)
-            .filter((x) -> x[0][0] isnt x[1][0] or
-                           x[0][1] isnt x[1][1])
-            .onValue (x) -> PlaySound 'step'
+GameState.heroPos.slidingWindow(2)
+                 .filter((x) -> x.length is 2)
+                 .filter((x) -> x[0][0] isnt x[1][0] or
+                                x[0][1] isnt x[1][1])
+                 .onValue (x) -> PlaySound 'step'
 
 entitySource = Bacon.combineTemplate
-  heroPosition: heroPosition
+  heroPosition: GameState.heroPos
 
 entities = entitySource.map (data) ->
   elements = []
@@ -33,9 +30,6 @@ entities.onValue (x) ->
   console.log "ents"
   console.log x
 
-setCurrentMap = new Bacon.Bus
-currentMap = setCurrentMap.toProperty "first"
-
 tiles =
   '*': 'stone'
   ' ': 'ground'
@@ -46,7 +40,7 @@ tileEvents =
   ' ':
     type: 'walk'
 
-baseMapData = currentMap.flatMapLatest (x) ->
+baseMapData = GameState.location.flatMapLatest (x) ->
   ReadFile "#{x}.level"
 baseMapSource = baseMapData.map (data) ->
   lines = data.split /\n/
@@ -67,12 +61,17 @@ handleService = (options) ->
       $('#castle').modal 'show'
       # things
 
+setMap = (map) ->
+  GameState.mutate (state) ->
+    state.location = map
+    state
+
 plugKey = (stream, oX, oY) ->
   sources = Bacon.combineTemplate
-    oldPos: heroPosition
+    oldPos: GameState.heroPos
     map: baseMap
     md: baseMapMetadata
-  setHeroPosition.plug sources.sampledBy(stream).map (params) ->
+  newPosition = sources.sampledBy(stream).map (params) ->
     {oldPos, map, md} = params
     newPos = [oldPos[0] + oX, oldPos[1] + oY]
     tile = map[newPos[1]][newPos[0]]
@@ -86,18 +85,23 @@ plugKey = (stream, oX, oY) ->
       when "block"
         oldPos
       when "border_y"
-        setCurrentMap.push event.dest
+        setMap event.dest
         [newPos[0], (HEIGHT - 1) - newPos[1]]
       when "border_x"
-        setCurrentMap.push event.dest
+        setMap event.dest
         [(WIDTH - 1) - newPos[0], newPos[1]]
       when "gateway"
-        setCurrentMap.push event.dest
+        setMap event.dest
         event.pos
       when "service"
         handleService event
         oldPos
     # work out the event
+  newPosition.onValues (x, y) ->
+    GameState.mutate (state) ->
+      state.x = x
+      state.y = y
+      state
 
 $ ->
   plugKey Keys.Left, -1, 0
@@ -127,8 +131,4 @@ $ ->
       newEnt = paper.image("img/sprites/#{entity.sprite}.png",
                            entity.x*UNIT, entity.y*UNIT, UNIT, UNIT)
       entitySprites.push newEnt
-
-window.Map =
-  Hero: heroPosition
-  Map: currentMap
 

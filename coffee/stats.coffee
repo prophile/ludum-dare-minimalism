@@ -5,10 +5,9 @@ postStats = (stats) ->
     data: JSON.stringify(stats)
     contentType: "application/json"
 
-Bacon.onValues Map.Hero, Map.Map, (hero, map) ->
+GameState.stream.sampledBy(GameState.heroPos.changes().skipDuplicates())
+                .onValue (state) ->
   postStats
     event: 'move'
-    x: hero[0]
-    y: hero[1]
-    map: map
+    state: state
 
