@@ -118,3 +118,7 @@ $ ->
                            entity.x*UNIT, entity.y*UNIT, UNIT, UNIT)
       entitySprites.push newEnt
 
+window.Map =
+  Hero: heroPosition
+  Map: currentMap
+
