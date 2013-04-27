@@ -54,6 +54,10 @@ while (true) {
         $item->transmitIfChanged();
     }
     flush();
+    if ($_SERVER['SERVER_ADMIN'] == 'webmaster@alastair.hovercatsw.com') {
+        // production system, don't do reloads
+        exit(0);
+    }
     sleep(6);
 }
 
