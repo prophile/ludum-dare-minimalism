@@ -1,4 +1,6 @@
 {
-  "step": "step.wav"
+  "step": "step.wav",
+  "debug": "step.wav",
+  "fanfare": "fanfare.wav"
 }
 

@@ -18,9 +18,14 @@ window.Step = GameState.heroPos
                        .filter((x) -> x.length is 2)
                        .filter((x) -> x[0][0] isnt x[1][0] or
                                       x[0][1] isnt x[1][1])
+
+window.ChangeMap = GameState.location.changes().skipDuplicates()
+
+ChangeMap.onValue ->
+  PlaySound 'debug'
+
 Step.onValue ->
   PlaySound 'step'
-
 
 entitySource = Bacon.combineTemplate
   heroPosition: GameState.heroPos
@@ -67,6 +72,12 @@ baseMapMetadata = baseMapData.map (data) ->
   _.object ([item[0], JSON.parse(item[1])] for item in elements when item.length is 2)
 
 baseMap = baseMapSource.toProperty initialMap()
+
+# Do mappy things
+ChangeMap.onValue ->
+  GameState.mutate (state) ->
+    state.creatures = []
+    state
 
 # Creature updates and encounters on step
 Bacon.combineAsArray(GameState.heroPos, baseMapSource, baseMapMetadata)

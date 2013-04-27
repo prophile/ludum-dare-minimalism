@@ -18,10 +18,12 @@ $ ->
           elements[element].unload()
         for sound of soundDB
           do (sound) ->
-            console.log "Loading sound '#{sound}'..."
+            url = "sound/#{soundDB[sound]}"
+            console.log "Loading sound '#{sound}' from #{url}..."
             elements[sound] = soundManager.createSound
               id: sound
               url: "sound/#{soundDB[sound]}"
               onload: ->
                 console.log "Loaded sound '#{sound}'"
+                console.log elements
 
