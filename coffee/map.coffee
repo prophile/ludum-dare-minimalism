@@ -127,10 +127,10 @@ Bacon.combineAsArray(GameState.heroPos, baseMapSource, baseMapMetadata)
         creature.state = "enraged" if Distance(creature.x, creature.y, hero[0], hero[1])<=3
     # Stage 3: creature engagement
     # Stage 4: creature creation (possibly)
-    if not hasRoamer and not meta.noRandomSpawn?
+    if not hasRoamer and meta.fauna?
       if Math.random() < 0.1
         # create a roamer
-        # TODO: pick type
+        type = meta.fauna[Math.floor(Math.random() * meta.fauna.length)]
         # TODO: pick location
         state.creatures.push
           type: "badger"

@@ -15,4 +15,5 @@ $ = ["ground", {"type": "border_y", "dest": "first"}]
 . = ["grass", {"type": "walk"}]
 & = ["grass", {"type": "block"}]
 aiPath = "."
+fauna = ["badger"]
 
