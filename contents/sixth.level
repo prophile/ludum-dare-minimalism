@@ -1,0 +1,20 @@
+****************
+*        ~~~~~~~
+*-------~~~~~~~~
+*           ~~~~
+<             ~~
+<              >
+<              >
+*              >
+*              >
+**             >
+***            >
+*****VVVVVVVVVVV
+< = ["ground", {"type": "border_x", "dest": "second"}]
+V = ["ground", {"type": "block"}]
+> = ["ground", {"type": "block"}]
+- = ["stream-x", {"type": "walk"}]
+~ = ["water", {"type": "block"}]
+aiPath = ["-"]
+fauna = ["weasel"]
+

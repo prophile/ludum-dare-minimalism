@@ -2,18 +2,22 @@
 **.. .....******
 *... .....******
 *... .....******
-*... .....*.....
-*...           .
-*... ...........
-*... ........***
+*... .....*....>
+*...           ~
+*... .....*....>
+*... .....*..***
 *... *....******
 *... *....******
 *... *....******
-*&&&&***********
+*&&&V***********
 % = ["grass", {"type": "border_y", "dest": "first"}]
 $ = ["ground", {"type": "border_y", "dest": "first"}]
 . = ["grass", {"type": "walk"}]
 & = ["grass", {"type": "block"}]
+V = ["ground", {"type": "block"}]
+> = ["grass", {"type": "border_x", "dest": "sixth"}]
+~ = ["ground", {"type": "border_x", "dest": "sixth"}]
 aiPath = "."
-fauna = ["badger"]
+fauna = ["badger", "bug"]
+parked = [{"x": 10, "y": 5, "type": "weasel", "milestone": "second-b1"}]
 
