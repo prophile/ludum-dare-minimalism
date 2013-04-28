@@ -9,10 +9,12 @@
 *..............*
 *.*******......*
 *.......*......*
-*.**************
+*v**************
 . = ["cave", {"type": "walk"}]
 $ = ["stone", {"type": "walk"}]
 ^ = ["cavemouth", {"type": "gateway", "dest": "first", "pos": [1, 3]}]
 A = ["cavemouth", {"type": "gateway", "dest": "third", "pos": [5, 1]}]
+v = ["cave", {"type": "border_y", "dest": "cave2"}]
 aiPath = "."
+fauna = ["badger"]
 
