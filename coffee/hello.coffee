@@ -2,7 +2,7 @@ window.XPToLevel = (xp) ->
   Math.floor(2.708 * Math.log(0.606*(xp + 22))) - 6
 
 window.MaxHP = (level, player) ->
-  Math.floor((if player then 2.5 else 1.8) * (0.5*level*level + 0.9*level + 9))
+  Math.floor((if player then 3.1 else 1.8) * (0.5*level*level + 0.9*level + 9))
 
 window.Roll =
   die: (dieMax) ->
@@ -18,13 +18,9 @@ window.Roll =
       baseLevel = critAction(baseLevel)
     baseLevel
   versus: (proposition, opposition) ->
-    proRoll = Roll.die proposition
-    if proRoll is proposition
-      return true # critical hit
-    oppRoll = Roll.die opposition
-    if oppRoll is opposition
-      return false # critical dodge
-    return proRoll > oppRole
+    proRoll = Roll.die (proposition + 5)
+    oppRoll = Roll.die (opposition + 5)
+    return proRoll > oppRoll
 
 window.CombatUpdate = (attackerStats, defenderStats, didCrit = ->) ->
   # Roll versus for hit

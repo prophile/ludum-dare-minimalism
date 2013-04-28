@@ -1,8 +1,8 @@
 {
   "badger": {"sprite": "badger",
-             "stats": {"str": 8,
+             "stats": {"str": 4,
                        "dex": 3,
-                       "con": 7},
+                       "con": 4},
              "name": "Badger"},
   "bug": {"sprite": "bug",
           "stats": {"str": 8,

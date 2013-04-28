@@ -19,6 +19,21 @@ $ ->
            .map((x) -> if x.combatState? then 'show' else 'hide')
            .skipDuplicates()
            .assign $('#combat'), 'modal'
+  GameState.stream
+           .map((x) -> x.stats)
+           .map((x) -> x.str)
+           .map(XPToLevel)
+           .assign $('.strlevel'), 'text'
+  GameState.stream
+           .map((x) -> x.stats)
+           .map((x) -> x.con)
+           .map(XPToLevel)
+           .assign $('.conlevel'), 'text'
+  GameState.stream
+           .map((x) -> x.stats)
+           .map((x) -> x.dex)
+           .map(XPToLevel)
+           .assign $('.dexlevel'), 'text'
   run = $('#cmbt-run').asEventStream 'click'
   GameState.inCombat
            .sampledBy(run)
@@ -97,6 +112,9 @@ $ ->
   dead.map((x) -> if x then 'show' else 'hide')
       .assign $('#death'), 'modal'
 
+  Keys.Stats.onValue ->
+    console.log "Left combat."
+    _.delay((-> $('#levelup').modal 'show'), 200)
 
   Bacon.onValues GameState.stream, CreatureDB, (state, creatures) ->
     return unless state.combatState?
