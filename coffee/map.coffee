@@ -248,6 +248,11 @@ handleService = (options) ->
       PlaySound 'fanfare'
       $('#castle').modal 'show'
       # things
+    when "heal"
+      PlaySound 'heal'
+      GameState.mutate (state) ->
+        state.hp = MaxHP(XPToLevel(state.stats.con), true)
+        state
 
 setMap = (map) ->
   GameState.mutate (state) ->
