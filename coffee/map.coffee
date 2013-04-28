@@ -33,6 +33,7 @@ $ ->
         creatureType = state.combatState.type
         posX = state.x
         posY = state.y
+        milestone = state.combatState.milestone
         _.defer ->
           GameState.mutate (state_) ->
             state_.creatures.push
@@ -40,6 +41,7 @@ $ ->
               state: "parked"
               x: posX
               y: posY
+              milestone: milestone
             state_
         state.x = state.combatState.restorePosition.x
         state.y = state.combatState.restorePosition.y
