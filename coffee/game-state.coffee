@@ -11,6 +11,7 @@ initialGameState =
     alt: 0 # alteration magic, used in calculation of effectiveness
   hp: 26
   creatures: []
+  milestones: []
 
 stateBus = new Bacon.Bus
 stateProp = stateBus.toProperty initialGameState

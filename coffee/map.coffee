@@ -105,7 +105,7 @@ window.Step = GameState.heroPos
                        .filter((x) -> x[0][0] isnt x[1][0] or
                                       x[0][1] isnt x[1][1])
 
-window.ChangeMap = GameState.location.changes().skipDuplicates()
+window.ChangeMap = GameState.location.changes().skipDuplicates().debounce(5)
 
 ChangeMap.onValue ->
   PlaySound 'debug'
@@ -156,10 +156,20 @@ baseMapMetadata = baseMapData.map (data) ->
 baseMap = baseMapSource.toProperty initialMap()
 
 # Do mappy things
-ChangeMap.onValue ->
-  GameState.mutate (state) ->
-    state.creatures = []
-    state
+baseMapMetadata.toProperty().sampledBy(ChangeMap).onValue (meta) ->
+  _.delay ->
+    GameState.mutate (state) ->
+      console.log "Map load"
+      state.creatures = []
+      if meta.parked?
+        for park in meta.parked
+          continue if park.milestone? and park.milestone in state.milestones
+          state.creatures.push
+            type: park.type
+            state: "parked"
+            x: park.x
+            y: park.y
+      state
 
 # Creature updates and encounters on step
 Bacon.combineAsArray(GameState.heroPos, CreatureDB, baseMapSource, baseMapMetadata)
@@ -208,7 +218,8 @@ Bacon.combineAsArray(GameState.heroPos, CreatureDB, baseMapSource, baseMapMetada
       if creature.state is "roam"
         creature.state = "enraged" if Distance(creature.x, creature.y, hero[0], hero[1])<=5
     # Stage 3: creature engagement
-      if Distance(creature.x, creature.y, hero[0], hero[1]) <= 1
+      engageDistance = if creature.state is "parked" then 0 else 1
+      if Distance(creature.x, creature.y, hero[0], hero[1]) <= engageDistance
         {con, str, dex} = cdb[creature.type].stats
         state.combatState =
           hp: MaxHP(XPToLevel(con), false)
