@@ -9,7 +9,7 @@ initialGameState =
     hea: 0 # healing magic, used in calculation of effectiveness
     des: 0 # destruction magic, used in calculation of effectiveness
     alt: 0 # alteration magic, used in calculation of effectiveness
-  hp: 10
+  hp: 25
   creatures: []
 
 # Maximum HP is calculated as:

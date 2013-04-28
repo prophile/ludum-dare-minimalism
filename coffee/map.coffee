@@ -19,11 +19,34 @@ $ ->
   run = $('#cmbt-run').asEventStream 'click'
   GameState.inCombat
            .sampledBy(run)
+           .filter((x) -> x)
            .onValue ->
     console.log "Leaving combat..."
     GameState.mutate (state) ->
       delete state.combatState
       state
+  attack = $('#cmbt-attack').asEventStream 'click'
+  GameState.inCombat
+           .sampledBy(attack)
+           .filter((x) -> x)
+           .onValue ->
+    GameState.mutate (state) ->
+      # Player attacks first
+      crit = false
+      hitCreature = CombatUpdate state.stats, state.combatState, ->
+        crit = true
+      if crit
+        PlaySound 'crit'
+      else
+        PlaySound (if hitCreature > 0 then 'hit' else 'miss')
+      state.combatState.hp -= hitCreature
+      # If creature is alive, it hits back
+      if state.combatState.hp > 0
+        hitPlayer = CombatUpdate state.combatState, state.stats
+        PlaySound 'hurt' if hitPlayer > 0
+        state.hp -= hitPlayer
+      state
+
   Bacon.onValues GameState.stream, CreatureDB, (state, creatures) ->
     return unless state.combatState?
     type = state.combatState.type
