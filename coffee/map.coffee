@@ -256,7 +256,7 @@ Bacon.combineAsArray(GameState.heroPos, CreatureDB, baseMapSource, baseMapMetada
           location = possLocation
         if location?
           state.creatures.push
-            type: "badger"
+            type: type
             state: "roam"
             x: location[0]
             y: location[1]
