@@ -34,4 +34,5 @@ window.GameState =
   location: stateProp.map((x) -> x.location)
   heroPos: stateProp.map((x) -> [x.x, x.y])
   creatures: stateProp.map((x) -> x.creatures)
+  inCombat: stateProp.map((x) -> x.combatState?)
 

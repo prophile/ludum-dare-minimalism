@@ -16,6 +16,14 @@ $ ->
            .map((x) -> if x.combatState? then 'show' else 'hide')
            .skipDuplicates()
            .assign $('#combat'), 'modal'
+  run = $('#cmbt-run').asEventStream 'click'
+  GameState.inCombat
+           .sampledBy(run)
+           .onValue ->
+    console.log "Leaving combat..."
+    GameState.mutate (state) ->
+      delete state.combatState
+      state
 
 GameState.stream
          .map((x) -> x.combatState?)
@@ -55,10 +63,6 @@ entities = entitySource.map (data) ->
       x: creature.x
       y: creature.y
   elements
-
-entities.onValue (x) ->
-  console.log "ents"
-  console.log x
 
 tiles =
   '*': 'stone'
