@@ -26,6 +26,23 @@ $ ->
            .onValue ->
     console.log "Leaving combat..."
     GameState.mutate (state) ->
+      console.log state
+      if state.combatState.restorePosition?
+        # rematerialise the creature
+        console.log "Restoring player"
+        creatureType = state.combatState.type
+        posX = state.x
+        posY = state.y
+        _.defer ->
+          GameState.mutate (state_) ->
+            state_.creatures.push
+              type: creatureType
+              state: "parked"
+              x: posX
+              y: posY
+            state_
+        state.x = state.combatState.restorePosition.x
+        state.y = state.combatState.restorePosition.y
       delete state.combatState
       state
   attack = $('#cmbt-attack').asEventStream 'click'
@@ -55,7 +72,7 @@ $ ->
       delay = 0
       for effect in soundEffects
         do (effect) ->
-          setTimeout(-> PlaySound effect, delay)
+          setTimeout((-> PlaySound(effect)), delay)
         delay += 150
       state
   damage = GameState.stream
@@ -185,6 +202,7 @@ Bacon.combineAsArray(GameState.heroPos, CreatureDB, baseMapSource, baseMapMetada
      .sampledBy(Step)
      .onValues (hero, cdb, map, meta) ->
   GameState.mutate (state) ->
+    console.log "Moving creatures"
     # Create the PF map
     hasRoamer = false
     grid = new PF.Grid WIDTH, HEIGHT
@@ -236,6 +254,8 @@ Bacon.combineAsArray(GameState.heroPos, CreatureDB, baseMapSource, baseMapMetada
           str: str
           type: creature.type
         state.combatState.milestone = creature.milestone if creature.milestone?
+        if creature.state is "parked"
+          state.combatState.restorePosition = {x: hero[0], y: hero[1]}
         []
       else
         [creature])
@@ -291,6 +311,7 @@ plugKey = (stream, oX, oY) ->
   newPosition = sources.sampledBy(stream).map (params) ->
     {oldPos, map, md, comb} = params
     return oldPos if comb
+    console.log "Player movement"
     newPos = [oldPos[0] + oX, oldPos[1] + oY]
     tile = map[newPos[1]][newPos[0]]
     if md[tile]?
