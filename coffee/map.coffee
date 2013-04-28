@@ -60,13 +60,13 @@ $ ->
            .assign $('.enemy-hp'), 'text'
   combState.map((x) -> x.con)
            .map(XPToLevel)
-           .map(MaxHP)
+           .map((x) -> MaxHP(x, false))
            .assign $('.enemy-mhp'), 'text'
   stats = GameState.stream.map((x) -> x.stats)
   hp = GameState.stream.map((x) -> x.hp)
   stats.map((x) -> x.con)
        .map(XPToLevel)
-       .map(MaxHP)
+       .map((x) -> MaxHP(x, true))
        .assign $('.player-mhp'), 'text'
   hp.assign $('.player-hp'), 'text'
 
@@ -189,7 +189,7 @@ Bacon.combineAsArray(GameState.heroPos, CreatureDB, baseMapSource, baseMapMetada
       if Distance(creature.x, creature.y, hero[0], hero[1]) <= 1
         {con, str, dex} = cdb[creature.type].stats
         state.combatState =
-          hp: MaxHP(XPToLevel(con))
+          hp: MaxHP(XPToLevel(con), false)
           con: con
           dex: dex
           str: str

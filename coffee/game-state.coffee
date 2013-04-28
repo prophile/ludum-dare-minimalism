@@ -9,11 +9,8 @@ initialGameState =
     hea: 0 # healing magic, used in calculation of effectiveness
     des: 0 # destruction magic, used in calculation of effectiveness
     alt: 0 # alteration magic, used in calculation of effectiveness
-  hp: 25
+  hp: 26
   creatures: []
-
-# Maximum HP is calculated as:
-#   9 + ceil(0.3 * 2.2 ^ level)
 
 stateBus = new Bacon.Bus
 stateProp = stateBus.toProperty initialGameState

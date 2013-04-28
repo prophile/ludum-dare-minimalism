@@ -1,8 +1,8 @@
 window.XPToLevel = (xp) ->
   Math.floor(2.708 * Math.log(0.606*(xp + 22))) - 6
 
-window.MaxHP = (level) ->
-  Math.floor(2.5 * (0.5*level*level + 0.9*level + 9))
+window.MaxHP = (level, player) ->
+  Math.floor((if player then 2.5 else 1.8) * (0.5*level*level + 0.9*level + 9))
 
 window.Roll =
   die: (dieMax) ->
@@ -41,11 +41,12 @@ window.CombatUpdate = (attackerStats, defenderStats, didCrit = ->) ->
   crit = (damage) ->
     do didCrit
     damage * 2
-  hitDamage = Roll.single(1, 4, crit, XPToLevel(attackerStats.str))
+  hitDamage = Roll.single(2, 6, crit, XPToLevel(attackerStats.str))
+  hitDamage = Math.floor(hitDamage / 4)
   # Increment attacker strength stats by half hit damage
-  attackerStats.str += Math.floor(hitDamage * 0.5)
+  attackerStats.str += Math.ceil(hitDamage * 0.25)
   # Increment defender con stats by damage taken
-  defenderStats.con += hitDamage
+  defenderStats.con += Math.ceil(hitDamage * 0.25)
   return hitDamage
 
 window.Distance = (x1, y1, x2, y2) ->
