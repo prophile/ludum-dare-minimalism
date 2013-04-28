@@ -30,6 +30,22 @@ $ ->
     entry = creatures[type]
     $('#combat-enemy').attr('src', "img/sprites/#{entry.sprite}.png")
     $('#combat-enemy-name').text(entry.name)
+  combState = GameState.stream
+                       .filter((x) -> x.combatState?)
+                       .map((x) -> x.combatState)
+  combState.map((x) -> x.hp)
+           .assign $('.enemy-hp'), 'text'
+  combState.map((x) -> x.con)
+           .map(XPToLevel)
+           .map(MaxHP)
+           .assign $('.enemy-mhp'), 'text'
+  stats = GameState.stream.map((x) -> x.stats)
+  hp = GameState.stream.map((x) -> x.hp)
+  stats.map((x) -> x.con)
+       .map(XPToLevel)
+       .map(MaxHP)
+       .assign $('.player-mhp'), 'text'
+  hp.assign $('.player-hp'), 'text'
 
 GameState.stream
          .map((x) -> x.combatState?)
