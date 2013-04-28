@@ -117,9 +117,6 @@ window.Step = GameState.heroPos
 
 window.ChangeMap = GameState.location.changes().skipDuplicates().debounce(5)
 
-ChangeMap.onValue ->
-  PlaySound 'debug'
-
 Step.onValue ->
   PlaySound 'step'
 
