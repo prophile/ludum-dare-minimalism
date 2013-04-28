@@ -221,7 +221,7 @@ Bacon.combineAsArray(GameState.heroPos, CreatureDB, baseMapSource, baseMapMetada
       if creature.state is "roam"
         creature.state = "enraged" if Distance(creature.x, creature.y, hero[0], hero[1])<=5
     # Stage 3: creature engagement
-      engageDistance = if creature.state is "parked" then 0 else 1
+      engageDistance = if creature.state is "parked" then 1 else 1
       if Distance(creature.x, creature.y, hero[0], hero[1]) <= engageDistance
         {con, str, dex} = cdb[creature.type].stats
         state.combatState =
