@@ -14,5 +14,6 @@
 ^ = ["cave", {"type": "border_y", "dest": "cave"}]
 < = ["cave", {"type": "border_x", "dest": "cave3"}]
 aiPath = "."
-fauna = ["badger"]
+parked = [{"x": 14, "y": 5, "type": "robot", "milestone": "cave2-bonus1"}, {"x": 2, "y": 1, "type": "bee", "milestone": "cave2-bonus2"}, {"x": 1, "y": 2, "type": "commie", "milestone": "cave2-b1"}, {"x": 5, "y": 9, "type": "weasel", "milestone": "cave2-b2"}]
+fauna = ["bug", "commie"]
 

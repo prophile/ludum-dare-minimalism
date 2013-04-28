@@ -16,6 +16,6 @@ $ = ["stone", {"type": "walk"}]
 A = ["cavemouth", {"type": "gateway", "dest": "third", "pos": [5, 1]}]
 v = ["cave", {"type": "border_y", "dest": "cave2"}]
 aiPath = "."
-fauna = ["badger"]
-parked = [{"x": 8, "y": 1, "type": "badger", "milestone": "cave-b1"}, {"x": 1, "y": 9, "type": "commie", "milestone": "cave-b2"}]
+fauna = ["badger", "bug"]
+parked = [{"x": 8, "y": 1, "type": "badger", "milestone": "cave-b1"}, {"x": 1, "y": 9, "type": "commie", "milestone": "cave-b3"}, {"x": 8, "y": 8, "type": "bug", "milestone": "cave-b2"}]
 
