@@ -2,7 +2,7 @@
 **.... .....** *
 *^.... .***.@***
 *...         ..*
-<... .*... H...*
+<... T*... H...*
 B    .**.. ....*
 <... .**.. ....*
 <... ..*.. ....*
@@ -20,5 +20,6 @@ B = ["ground", {"type": "border_x", "dest": "third"}]
 H = ["heal", {"type": "service", "service": "heal"}]
 A = ["grass", {"type": "border_y", "dest": "fourth"}]
 i = ["ground", {"type": "border_y", "dest": "fourth"}]
+T = ["sign", {"type": "service", "service": "sign", "message": "Welcome to the town"}]
 aiPath = "."
 

@@ -270,6 +270,9 @@ handleService = (options) ->
       GameState.mutate (state) ->
         state.hp = MaxHP(XPToLevel(state.stats.con), true)
         state
+    when "sign"
+      $('#sign-text').text options.message
+      $('#sign').modal 'show'
 
 setMap = (map) ->
   GameState.mutate (state) ->
