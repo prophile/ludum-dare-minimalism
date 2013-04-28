@@ -215,8 +215,7 @@ Bacon.combineAsArray(GameState.heroPos, CreatureDB, baseMapSource, baseMapMetada
             firstStep = path[1]
             moveDir = [firstStep[0] - creature.x, firstStep[1] - creature.y]
       newPos = [creature.x + moveDir[0], creature.y + moveDir[1]]
-      tile = map[newPos[1]][newPos[0]]
-      walkable = (tile is ' ' or tile in (meta.aiPath ? ""))
+      walkable = grid.isWalkableAt(newPos[0], newPos[1])
       if walkable
         creature.x = newPos[0]
         creature.y = newPos[1]
