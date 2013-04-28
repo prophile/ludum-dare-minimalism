@@ -24,6 +24,12 @@ $ ->
     GameState.mutate (state) ->
       delete state.combatState
       state
+  Bacon.onValues GameState.stream, CreatureDB, (state, creatures) ->
+    return unless state.combatState?
+    type = state.combatState.type
+    entry = creatures[type]
+    $('#combat-enemy').attr('src', "img/sprites/#{entry.sprite}.png")
+    $('#combat-enemy-name').text(entry.name)
 
 GameState.stream
          .map((x) -> x.combatState?)
@@ -112,11 +118,11 @@ Bacon.combineAsArray(GameState.heroPos, CreatureDB, baseMapSource, baseMapMetada
     for creature in state.creatures
       if creature.state is "parked"
         grid.setWalkableAt(creature.x, creature.y, false)
-      else if creature.state is "roam"
+      else
         hasRoamer = true
     finder = new PF.BiAStarFinder
-      allowDiagonal: false
-      heuristic: PF.Heuristic.chebyshev
+      allowDiagonal: true
+      heuristic: PF.Heuristic.manhattan
     # Stage 1: creature movement
     state.creatures = _.flatten (for creature in state.creatures
       moveDir = [0, 0]
@@ -139,7 +145,7 @@ Bacon.combineAsArray(GameState.heroPos, CreatureDB, baseMapSource, baseMapMetada
         creature.y = newPos[1]
     # Stage 2: creature enragement
       if creature.state is "roam"
-        creature.state = "enraged" if Distance(creature.x, creature.y, hero[0], hero[1])<=3
+        creature.state = "enraged" if Distance(creature.x, creature.y, hero[0], hero[1])<=5
     # Stage 3: creature engagement
       if Distance(creature.x, creature.y, hero[0], hero[1]) <= 1
         {con, str, dex} = cdb[creature.type].stats
@@ -192,8 +198,10 @@ plugKey = (stream, oX, oY) ->
     oldPos: GameState.heroPos
     map: baseMap
     md: baseMapMetadata
+    comb: GameState.inCombat
   newPosition = sources.sampledBy(stream).map (params) ->
-    {oldPos, map, md} = params
+    {oldPos, map, md, comb} = params
+    return oldPos if comb
     newPos = [oldPos[0] + oX, oldPos[1] + oY]
     tile = map[newPos[1]][newPos[0]]
     if md[tile]?

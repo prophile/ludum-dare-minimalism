@@ -18,6 +18,11 @@
     <script src="js/code/stats.js"></script>
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/bootstrap-responsive.min.css">
+    <style>
+        #combat-table td {
+            text-align: center;
+        }
+    </style>
   </head>
   <body>
     <div class="container">
@@ -29,6 +34,20 @@
             <h3>Combat</h3>
         </div>
         <div class="modal-body">
+            <table id="combat-table" class="table">
+                <tr>
+                    <td><img src="img/sprites/hero.png"></td>
+                    <td><img id="combat-enemy" src="about:blank"></td>
+                </tr>
+                <tr>
+                    <td>HP</td>
+                    <td>HP</td>
+                </tr>
+                <tr>
+                    <td>You</td>
+                    <td id="combat-enemy-name">Enemy</td>
+                </tr>
+            </table>
             <p>Some combat going on.</p>
         </div>
         <div class="modal-footer">

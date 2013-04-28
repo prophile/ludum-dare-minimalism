@@ -2,6 +2,7 @@
   "badger": {"sprite": "badger",
              "stats": {"str": 8,
                        "dex": 3,
-                       "con": 7}}
+                       "con": 7},
+             "name": "Badger"}
 }
 
