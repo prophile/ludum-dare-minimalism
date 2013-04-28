@@ -1,6 +1,6 @@
-***... .....****
-**.... ........*
-*^.... ........*
+***AAAiAAAAA**i*
+**.... .....** *
+*^.... ......***
 *...       ....*
 <... .*@.......*
 B    .**.......*
@@ -17,5 +17,7 @@ $ = ["ground", {"type": "border_y", "dest": "second"}]
 < = ["grass", {"type": "border_x", "dest": "third"}]
 B = ["ground", {"type": "border_x", "dest": "third"}]
 @ = ["castle", {"type": "service", "service": "castle"}]
+A = ["grass", {"type": "border_y", "dest": "fourth"}]
+i = ["ground", {"type": "border_y", "dest": "fourth"}]
 aiPath = "."
 
