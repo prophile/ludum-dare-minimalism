@@ -34,14 +34,15 @@ $ ->
            .filter((x) -> x)
            .onValue ->
     GameState.mutate (state) ->
+      soundEffects = []
       # Player attacks first
       crit = false
       hitCreature = CombatUpdate state.stats, state.combatState, ->
         crit = true
       if crit
-        PlaySound 'crit'
+        soundEffects.push 'crit'
       else
-        PlaySound (if hitCreature > 0 then 'hit' else 'miss')
+        soundEffects.push (if hitCreature > 0 then 'hit' else 'miss')
       state.combatState.hp -= hitCreature
       if state.combatState.hp <= 0
         state.milestones.push state.combatState.milestone if state.combatState.milestone?
@@ -49,8 +50,13 @@ $ ->
       # If creature is alive, it hits back
       else
         hitPlayer = CombatUpdate state.combatState, state.stats
-        PlaySound 'hurt' if hitPlayer > 0
+        soundEffects.push 'hurt' if hitPlayer > 0
         state.hp -= hitPlayer
+      delay = 0
+      for effect in soundEffects
+        do (effect) ->
+          setTimeout(-> PlaySound effect, delay)
+        delay += 150
       state
   damage = GameState.stream
                     .map((x) -> x.hp)
