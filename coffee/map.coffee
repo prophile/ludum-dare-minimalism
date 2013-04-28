@@ -12,6 +12,9 @@ initialMap = ->
 $ ->
   ReadFile('castle-text.txt').assign $('#castle-text'), 'text'
   ReadFile('castle-name.txt').assign $('#castle-name'), 'text'
+  ReadFile('death-message.txt').assign $('#death-text'), 'text'
+  $('#restart').click ->
+    GameState.reset()
   GameState.stream
            .map((x) -> if x.combatState? then 'show' else 'hide')
            .skipDuplicates()
