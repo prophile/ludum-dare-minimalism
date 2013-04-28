@@ -46,6 +46,26 @@ $ ->
         PlaySound 'hurt' if hitPlayer > 0
         state.hp -= hitPlayer
       state
+  damage = GameState.stream
+                    .map((x) -> x.hp)
+                    .skipDuplicates()
+                    .slidingWindow(2)
+                    .filter((x) -> x.length is 2)
+                    .filter((x) -> x[1] < x[0])
+  damage.onValue ->
+    PlaySound 'hurt'
+  damage.onValue (x) ->
+    newHealth = x[1]
+    if newHealth <= 0
+      GameState.mutate (state) ->
+        state.hp = 0
+        delete state.combatState
+        state
+  dead = GameState.stream.map((x) -> x.hp)
+                         .map((x) -> x <= 0)
+  dead.map((x) -> if x then 'show' else 'hide')
+      .assign $('#death'), 'modal'
+
 
   Bacon.onValues GameState.stream, CreatureDB, (state, creatures) ->
     return unless state.combatState?
