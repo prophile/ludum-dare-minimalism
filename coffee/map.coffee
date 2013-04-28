@@ -40,8 +40,10 @@ $ ->
       else
         PlaySound (if hitCreature > 0 then 'hit' else 'miss')
       state.combatState.hp -= hitCreature
+      if state.combatState.hp <= 0
+        delete state.combatState
       # If creature is alive, it hits back
-      if state.combatState.hp > 0
+      else
         hitPlayer = CombatUpdate state.combatState, state.stats
         PlaySound 'hurt' if hitPlayer > 0
         state.hp -= hitPlayer
