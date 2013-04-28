@@ -17,5 +17,5 @@ A = ["cavemouth", {"type": "gateway", "dest": "third", "pos": [5, 1]}]
 v = ["cave", {"type": "border_y", "dest": "cave2"}]
 aiPath = "."
 fauna = ["badger"]
-parked = [{"x": 8, "y": 1, "type": "badger", "milestone": "cave-b1"}]
+parked = [{"x": 8, "y": 1, "type": "badger", "milestone": "cave-b1"}, {"x": 1, "y": 9, "type": "commie", "milestone": "cave-b2"}]
 
