@@ -58,7 +58,7 @@ while (true) {
         // production system, don't do reloads
         exit(0);
     }
-    sleep(6);
+    sleep(3);
 }
 
 ?>
