@@ -44,6 +44,7 @@ $ ->
         PlaySound (if hitCreature > 0 then 'hit' else 'miss')
       state.combatState.hp -= hitCreature
       if state.combatState.hp <= 0
+        state.milestones.push state.combatState.milestone if state.combatState.milestone?
         delete state.combatState
       # If creature is alive, it hits back
       else
@@ -167,11 +168,13 @@ baseMapMetadata.toProperty().sampledBy(ChangeMap).onValue (meta) ->
       if meta.parked?
         for park in meta.parked
           continue if park.milestone? and park.milestone in state.milestones
-          state.creatures.push
+          creature =
             type: park.type
             state: "parked"
             x: park.x
             y: park.y
+          creature.milestone = park.milestone if park.milestone?
+          state.creatures.push creature
       state
 
 # Creature updates and encounters on step
@@ -230,6 +233,7 @@ Bacon.combineAsArray(GameState.heroPos, CreatureDB, baseMapSource, baseMapMetada
           dex: dex
           str: str
           type: creature.type
+        state.combatState.milestone = creature.milestone if creature.milestone?
         []
       else
         [creature])
